@@ -7,7 +7,7 @@ This project is a part of an online full-stack Bootcamp. I was tasked to build a
 
 # What can you do on this website?
 
-### 1. Use the links in the navbar to navigate to different parts of the site once you log in. At the moment, *`only Movies tab works, and I'm working on making all tabs available.`*
+### 1. Use the links in the navbar to navigate to different parts of the website once you log in. At the moment, *`only Movies tab works, and I'm working on making all tabs available.`*
 ### 2. Register using the registration form. *`Multiple users can register.`*
 ### 3. Use the login form to log in with the user credentials you registered and reveal the links in the navbar.
 ### 4. In the movies tab, you can access each movie's details by clicking on the movie poster.
