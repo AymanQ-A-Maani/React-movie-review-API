@@ -1,13 +1,20 @@
-import React, {useContext} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { IsLoggedInContext } from '../Context/IsLoggedInContext'
+import React, {useContext, useState} from 'react'
+import { Link} from 'react-router-dom'
+import { UserContext } from '../Context/UserContext';
+
+
 export default function Navbar() {
 
-    let {isLoggedIn,setIsLoggedIn} = useContext(IsLoggedInContext);
+
+    let {user, users, setUser} = useContext(UserContext);
 
     function logOut(){
-    localStorage.removeItem('isLoggedIn');
-    setIsLoggedIn(localStorage.getItem('isLoggedIn'));
+        localStorage.removeItem('isLoggedIn');
+        let currentUser = {...user};
+        currentUser.isLoggedIn = false;
+        users.splice(currentUser.id, 1, currentUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        setUser(currentUser);
     }
 
   return (
@@ -18,7 +25,7 @@ export default function Navbar() {
       <span className="navbar-toggler-icon" />
     </button> 
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        {isLoggedIn ? <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+        {user.isLoggedIn ? <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
                 <Link className="nav-link" to="Home">Home</Link>
             </li>
@@ -61,7 +68,7 @@ export default function Navbar() {
             </li>
 
             <li className="nav-item"> 
-            {isLoggedIn ? <Link className="nav-link" to="Login" onClick={logOut}>Logout</Link> : <Link className="nav-link" to="Login">login</Link>}
+            {user.isLoggedIn ? <Link className="nav-link" to="Login" onClick={logOut}>Logout</Link> : <Link className="nav-link" to="Login">login</Link>}
         
             </li>
 

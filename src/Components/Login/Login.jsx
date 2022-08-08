@@ -1,30 +1,34 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../Context/UserContext';
-import { IsLoggedInContext } from '../Context/IsLoggedInContext';
 import style from './Login.module.css';
 
 
 export default function Login() {
-let navigate = useNavigate();
+  let navigate = useNavigate();
 
-  let {user} = useContext(UserContext);
+  let {users, userId, setUser} = useContext(UserContext);
   let [loginUser,setLoginUser] = useState({});
-  let {setIsLoggedIn} = useContext(IsLoggedInContext);
+
 
   function submitFormData(e){
-  
     e.preventDefault();
-    if(loginUser.email==user.email && loginUser.password==user.password){
-      
-      alert('Login Successful');
-      localStorage.setItem('isLoggedIn',true);
-      setIsLoggedIn(localStorage.getItem('isLoggedIn'));
-      navigate('/home');
-    }else{
-      alert('Login Failed');
+    for(let i =0; i<users.length; i++){
+      if(users[i].email==loginUser.email && users[i].password==loginUser.password){
+        localStorage.setItem('isLoggedIn',true);
+        userId = users[i].id;
+        let currentUser = {...users[i]};
+        currentUser.isLoggedIn = localStorage.getItem('isLoggedIn');
+        users.splice(i,1,currentUser);
+        localStorage.setItem('users',JSON.stringify(users));
+        setUser(currentUser);
+        alert('Login Successful');
+        navigate('/home');
+      }else if( i == users.length-1 && users[i].email != loginUser.email && users[i].password != loginUser.password){
+        alert('username or password is incorrect');
+      }
     }
-    }
+  }
   
 
   function getFormValue(e){

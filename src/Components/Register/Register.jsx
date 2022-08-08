@@ -6,7 +6,7 @@ import Joi from 'joi';
 export default function Register() {
 
   let navigate = useNavigate();
-  let {user,setUser} = useContext(UserContext);
+  let {user, users, setUser} = useContext(UserContext);
   let [errorList,setErrorList] = useState([]);
   
   function submitFormData(e){
@@ -15,6 +15,8 @@ export default function Register() {
     if(validateResult.error){
       setErrorList(validateResult.error.details);
     }else{
+      users.push(user);
+      localStorage.setItem(`users`, JSON.stringify(users));
       alert('Registration Successful');
       navigate('/login');
     }
@@ -22,17 +24,22 @@ export default function Register() {
 
   function getFormValue(e){
     let myUser = {...user};
+    for(let i=0;i<=users.length;i++){
+      myUser.id = i
+    }
     myUser[e.target.name] = e.target.value; //e.target.name is the name of the input field
     setUser(myUser);
   }
 
   function validateForm(){
     const schema = Joi.object({
+      id: Joi.number(),
       first_name: Joi.string().required().min(3).max(30),
       last_name: Joi.string().required().min(3).max(30),
       age: Joi.number().required().min(18).max(90),
       email: Joi.string().required().email({tlds: {allow: ['com', 'net']}}),
       password: Joi.string().required().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')),
+      isLoggedIn: Joi.boolean()
     });
     return schema.validate(user, {abortEarly: false});
   }

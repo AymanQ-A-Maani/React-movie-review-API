@@ -11,45 +11,51 @@ import Register from '../Register/Register'
 import TV from '../TV/TV'
 import React, {useState} from 'react'
 import { UserContext } from '../Context/UserContext'
-import { IsLoggedInContext } from '../Context/IsLoggedInContext'
 import Details from '../Details/Details'
 
 
 export default function App() {
+  
+  let users = [];
+  let userId= '';
 
-  let [ user, setUser ] = useState({
-    first_name:'',
-    last_name:'',
-    age:'',
-    email:'',
-    password:'',
-  });
+  if(localStorage.getItem(`users`)){
+    users = JSON.parse(localStorage.getItem(`users`));
+    }
+  
 
-  let [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn'));
+  let [user, setUser] = useState({
+    id: 0,
+    first_name: '',
+    last_name: '',
+    age: '',
+    email: '',
+    password: '',
+    isLoggedIn: localStorage.getItem('isLoggedIn') ? localStorage.getItem('isLoggedIn') : false,
+  })
 
-
+console.log( "this is users array", users)
+console.log( "this is user object", user)
   return (
     <div>
-      <IsLoggedInContext.Provider value={{isLoggedIn, setIsLoggedIn}}>
+      <UserContext.Provider value={{users, userId, user, setUser}}>
       <Navbar />
       <div className="container">
-      <UserContext.Provider value={{user, setUser}}>
         <Routes>
-          <Route path="/" element={isLoggedIn?<Home />:<Login />} />
-          <Route path='Home' element={isLoggedIn?<Home />:<Login />} />
-          <Route path='Movie' element={isLoggedIn?<Movie />:<Login />} />
-          <Route path='details' element={isLoggedIn?<Details />:<Login />} />
-          <Route path='TV' element={isLoggedIn?<TV />:<Login />} />
-          <Route path='People' element={isLoggedIn?<People />:<Login />} />
-          <Route path='About' element={isLoggedIn?<About />:<Login />} />
-          <Route path='Login' element={isLoggedIn?<Login />:<Login />} />
+          <Route path="/" element={user.isLoggedIn?<Home />:<Login />} />
+          <Route path='Home' element={user.isLoggedIn?<Home />:<Login />} />
+          <Route path='Movie' element={user.isLoggedIn?<Movie />:<Login />} />
+          <Route path='details' element={user.isLoggedIn?<Details />:<Login />} />
+          <Route path='TV' element={user.isLoggedIn?<TV />:<Login />} />
+          <Route path='People' element={user.isLoggedIn?<People />:<Login />} />
+          <Route path='About' element={user.isLoggedIn?<About />:<Login />} />
+          <Route path='Login' element={user.isLoggedIn?<Login />:<Login />} />
           <Route path='Register' element={<Register />} />
-          <Route path='Network' element={isLoggedIn?<Network />:<Login />} />
+          <Route path='Network' element={user.isLoggedIn?<Network />:<Login />} />
           <Route path='*' element={<Notfound />} />
         </Routes>
-      </UserContext.Provider>
       </div>
-      </IsLoggedInContext.Provider>
+      </UserContext.Provider>
     </div>
   )
 }
